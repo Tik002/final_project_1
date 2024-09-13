@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">World Kitchen</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'recipe_list' %}">Menu</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'recipe_add' %}">Add Recipe</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <h1>{{ profile.user.username }} 's Profile</h1>
+    <p>{{ profile.user.name }}</p>
+    <p>{{ profile.gender }}</p>
+    <p>at {{ profile.country }}</p>
+    <ul>
+        <ul>
+            {% for recipe in recipes %}
+                <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></li>
+            {% empty %}
+                <p>No recipes found.</p>
+            {% endfor %}
+        </ul>
+    </ul>
+    <p>hiiii</p>
+    <footer>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </nav>
+            <div class="social-media">
+                <a href="https://facebook.com" target="_blank">Facebook</a>
+                <a href="https://instagram.com" target="_blank">Instagram</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+            </div>
+            <p>&copy; 2024 World Kitchen. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

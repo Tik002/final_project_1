@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeBook</title>
+    <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">World Kitchen</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'recipe_list' %}">Menu</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'recipe_add' %}">Add Recipe</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <form action="{% url 'recipe_add' %}" method="post">
+        {% csrf_token %}
+        <label for="title">Name of product</label><br><br>
+        <input type="text" id="title" name="title"><br><br>
+        <label for="ingredients">Ingredients</label><br><br>
+        <textarea name="ingredients" id="ingredients"></textarea><br><br>
+        <label for="instructions">Instruction</label><br><br>
+        <textarea name="instructions" id="instructions"></textarea><br><br>
+        <label for="prep_time">Prep time</label><br><br>
+        <input type="text" id="prep_time" name="prep_time"><br><br>
+        <input type="submit" value="Save">
+    </form>
+    <footer>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </nav>
+            <div class="social-media">
+                <a href="https://facebook.com" target="_blank">Facebook</a>
+                <a href="https://instagram.com" target="_blank">Instagram</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+            </div>
+            <p>&copy; 2024 World Kitchen. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

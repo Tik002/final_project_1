@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">World Kitchen</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'recipe_list' %}">Menu</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'recipe_add' %}">Add Recipe</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <label for="fname">First name:</label>
+        <input type="text" id="fname" name="fname"><br><br>
+        <label for="lname">Last name:</label>
+        <input type="text" id="lname" name="lname"><br><br>
+        <label for="gender">Gender</label>
+        <select name="gender" id="gender">
+            <option value="other">Other</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+        </select><br><br>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email"><br><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country"><br><br>
+        <input type="submit" value="Login"><br><br>
+        <a href="{% url 'login' %}"></a>
+    </form>
+    <footer>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </nav>
+            <div class="social-media">
+                <a href="https://facebook.com" target="_blank">Facebook</a>
+                <a href="https://instagram.com" target="_blank">Instagram</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+            </div>
+            <p>&copy; 2024 World Kitchen. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

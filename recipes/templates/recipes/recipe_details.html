@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeBook</title>
+    <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
+
+</head>
+<body> 
+    <header>
+        <div class="container">
+            <h1 class="logo">World Kitchen</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'recipe_list' %}">Menu</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'recipe_add' %}">Add Recipe</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <h1>{{ recipes.title }}</h1>
+    <br>
+    <h2>ingredients</h2>
+    <p>{{recipes.ingredients}}</p>
+    <br>
+    <h2>instructions</h2>
+    <p>{{recipes.instructions}}</p>
+    <br>
+    <p>lasting:{{recipes.prep_time}} minutes</p>
+    <p>rateing: {{recipes.rate}}</p>
+    <a href="{% url 'recipe_edit' recipes.id %}">Edit recipe</a>
+    <p>rate {{recipes.count}} users</p>
+    <a href="{% url 'rate' recipes.id %}">Rate</a>
+    <p>created by: {{recipes.creator}}</p>
+    <footer>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'recipe_list' %}">Menu</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'recipe_add' %}">Add Recipe</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            </nav>
+            <div class="social-media">
+                <a href="https://facebook.com" target="_blank">Facebook</a>
+                <a href="https://instagram.com" target="_blank">Instagram</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+            </div>
+            <p>&copy; 2024 World Kitchen. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
