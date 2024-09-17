@@ -3,6 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Recipe, RecipesUser
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+import requests
+from bs4 import BeautifulSoup
+
 
 
 
@@ -39,7 +42,11 @@ def register(request):
     return HttpResponseRedirect('/login/')
 
 
+
+
+
 def recipe_add(request):
+
     if request.user.is_authenticated:
         if request.method == 'GET':
             return render(request, "recipes/recipe_add.html")
@@ -62,7 +69,7 @@ def recipe_add(request):
             recipe.save()
             return HttpResponseRedirect('/')
     else:
-        return HttpResponseRedirect("/register/")
+        return HttpResponseRedirect("/login/")
 
 def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
@@ -93,7 +100,7 @@ def profile(request):
         recipes = Recipe.objects.filter(creator__user=request.user)
         return render(request, "recipes/profile.html", {"profile": profile, "recipes": recipes})
     else:
-        return HttpResponseRedirect("/register")
+        return HttpResponseRedirect("/login")
 
 def rate(request, pk):
     if request.user.is_authenticated:
@@ -114,7 +121,7 @@ def rate(request, pk):
                     return HttpResponse("write number 1-5")
         return render(request, 'recipes/rate.html', {'recipe': recipe})
     else:
-        return HttpResponseRedirect("/register/")
+        return HttpResponseRedirect("/login/")
 
 
 def log_in(request):
@@ -134,3 +141,4 @@ def log_in(request):
 def log_out(request):
     logout(request)
     return HttpResponseRedirect("login")
+
