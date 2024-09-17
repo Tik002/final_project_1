@@ -41,10 +41,6 @@ def register(request):
     recipesuser.save()
     return HttpResponseRedirect('/login/')
 
-
-
-
-
 def recipe_add(request):
 
     if request.user.is_authenticated:
@@ -112,7 +108,8 @@ def rate(request, pk):
                     rating = float(rating)
                     if 0 <= rating <= 5:
                         new_count = recipe.count + 1
-                        new_rate = (recipe.rate * recipe.count + rating) / new_count
+                        _rate = (recipe.rate * recipe.count + rating) / new_count
+                        new_rate = round(_rate, 2)
                         recipe.rate = new_rate
                         recipe.count = new_count
                         recipe.save()

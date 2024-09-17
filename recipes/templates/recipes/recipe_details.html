@@ -17,7 +17,7 @@
                     <li><a href="{% url 'recipe_list' %}">Menu</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'recipe_add' %}">Add recipe</a></li>
-                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,9 +32,15 @@
     <br>
     <p>lasting:{{recipes.prep_time}} minutes</p>
     <p>rateing: {{recipes.rate}}</p>
+
+
+    {% if recipes.creator == user %}
     <a href="{% url 'recipe_edit' recipes.id %}">Edit recipe</a>
+    {% endif %}
+
+    
     <p>rate {{recipes.count}} users</p>
-    <a href="{% url 'rate' recipes.id %}">Rate</a>
+        <a href="{% url 'rate' recipes.id %}">Rate</a>
     <p>created by: {{recipes.creator}}</p>
     <footer>
         <div class="container">

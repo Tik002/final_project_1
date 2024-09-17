@@ -16,25 +16,21 @@
                     <li><a href="{% url 'recipe_list' %}">Menu</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'recipe_add' %}">Add recipe</a></li>
-                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </div>
     </header>
     <h1>{{ profile.user.username }} 's Profile</h1>
-    <p>{{ profile.user.name }}</p>
     <p>{{ profile.gender }}</p>
     <p>at {{ profile.country }}</p>
     <ul>
-        <ul>
-            {% for recipe in recipes %}
-                <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></li>
-            {% empty %}
-                <p>No recipes found.</p>
-            {% endfor %}
-        </ul>
+        {% for recipe in recipes %}
+            <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></li>
+        {% empty %}
+            <p>No recipes found.</p>
+        {% endfor %}
     </ul>
-    <p>hiiii</p>
     <footer>
         <div class="container">
             <nav>

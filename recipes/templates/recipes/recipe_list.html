@@ -18,7 +18,14 @@
                     <li><a href="{% url 'recipe_list' %}">Menu</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'recipe_add' %}">Add recipe</a></li>
-                    <li><a href="{% url 'login' %}">Login</a></li>
+                    {% if user.is_authenticated %}
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
