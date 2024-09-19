@@ -35,7 +35,7 @@
 
 
     {% if recipes.creator == user %}
-    <a href="{% url 'recipe_edit' recipes.id %}">Edit recipe</a>
+        <a href="{% url 'recipe_edit' recipes.id %}">Edit recipe</a>
     {% endif %}
 
     

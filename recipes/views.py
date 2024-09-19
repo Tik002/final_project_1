@@ -17,6 +17,7 @@ def recipe_list(request):
 
 def recipe_detail(request, pk):
     recipes = get_object_or_404(Recipe, pk=pk)
+    print(request.user, request.recipes.creator)
     return render(request, "recipes/recipe_details.html", {"recipes": recipes})
 
 def register(request):
@@ -40,6 +41,59 @@ def register(request):
     recipesuser = RecipesUser(user = user, country = country, gender = gender)
     recipesuser.save()
     return HttpResponseRedirect('/login/')
+
+
+def scraping_add(request):
+    url = "https://www.bbcgoodfood.com/recipes/collection/easy-recipes"
+
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    results = soup.find_all("div", class_="card__section card__content")
+    user = request.user
+    ru = get_object_or_404(RecipesUser, user=user)
+    
+    
+
+    for recipe in results:
+        link = recipe.find('a')['href']
+        
+        recipe_response = requests.get(f'https://www.bbcgoodfood.com/{link}')
+        recipe_soup = BeautifulSoup(recipe_response.content, 'html.parser')
+        title0 = recipe.find('h2')
+
+
+        title = title0.get_text(strip=True) if title0 else "Untitled"
+        ingredients = [li.get_text(strip=True) for li in recipe_soup.find_all('li', class_='pb-xxs pt-xxs list-item list-item--separator')]
+        instructions = [step.get_text(strip=True) for step in recipe_soup.find_all('li', class_='pb-xs pt-xs list-item')]
+        prep_time = 55
+        
+# recipe_soup.find('time', class_='prep-time').get_text(strip=True) if recipe_soup.find('time', class_='prep-time') else "N/A"
+
+        recipe = Recipe(
+                    title = title,
+                    ingredients = ingredients,
+                    instructions = instructions,
+                    prep_time = prep_time,
+                    creator=ru
+                    )
+        recipe.save()
+    return render(request, "recipes/recipe_list.html", {})
+
+
+
+        # Print the extracted details
+    # print(f"Title: {title.text}")
+    # print(f"Prep Time: {prep_time}")
+    # print("Ingredients:")
+    # for ingredient in ingredients:
+    #     print(f"- {ingredient}")
+    # print(f"Instructions: {instructions}")
+    # print("$$$$$$$$$$$$$$$$$$$")
+
+
+
+
+
 
 def recipe_add(request):
 
