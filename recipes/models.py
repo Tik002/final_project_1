@@ -31,5 +31,12 @@ class Recipe(models.Model):
     def __str__(self) -> str:
         return self.title
 
-
-
+class Comment(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    text = models.TextField(max_length=400)
+    like_count = models.IntegerField(default=0)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.text

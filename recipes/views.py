@@ -1,12 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Recipe, RecipesUser
+from .models import Recipe, RecipesUser, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 import requests
 from bs4 import BeautifulSoup
-
-
+import datetime
 
 
 # Create your views here.
@@ -15,11 +14,16 @@ def recipe_list(request):
     recipes = Recipe.objects.all()
     return render(request, "recipes/recipe_list.html", {"recipes": recipes})
 
+#
+#
 def recipe_detail(request, pk):
     recipes = get_object_or_404(Recipe, pk=pk)
-    print(request.user, request.recipes.creator)
-    return render(request, "recipes/recipe_details.html", {"recipes": recipes})
+    boolean = recipes.creator.user == request.user
+    comment = get_object_or_404(Comment, pk=pk)
+    return render(request, "recipes/recipe_details.html", {"recipes": recipes, "boolean": boolean, "comment": comment})
 
+#
+#
 def register(request):
     if request.method == "GET":
         return render(request, "recipes/register.html")
@@ -42,18 +46,20 @@ def register(request):
     recipesuser.save()
     return HttpResponseRedirect('/login/')
 
-
+#
+#
 def scraping_add(request):
     url = "https://www.bbcgoodfood.com/recipes/collection/easy-recipes"
 
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     results = soup.find_all("div", class_="card__section card__content")
+
     user = request.user
     ru = get_object_or_404(RecipesUser, user=user)
     
-    
-
+    recipes = Recipe.objects.all()
+  
     for recipe in results:
         link = recipe.find('a')['href']
         
@@ -67,8 +73,6 @@ def scraping_add(request):
         instructions = [step.get_text(strip=True) for step in recipe_soup.find_all('li', class_='pb-xs pt-xs list-item')]
         prep_time = 55
         
-# recipe_soup.find('time', class_='prep-time').get_text(strip=True) if recipe_soup.find('time', class_='prep-time') else "N/A"
-
         recipe = Recipe(
                     title = title,
                     ingredients = ingredients,
@@ -77,24 +81,10 @@ def scraping_add(request):
                     creator=ru
                     )
         recipe.save()
-    return render(request, "recipes/recipe_list.html", {})
+    return render(request, "recipes/recipe_list.html", {"recipes": recipes})
 
-
-
-        # Print the extracted details
-    # print(f"Title: {title.text}")
-    # print(f"Prep Time: {prep_time}")
-    # print("Ingredients:")
-    # for ingredient in ingredients:
-    #     print(f"- {ingredient}")
-    # print(f"Instructions: {instructions}")
-    # print("$$$$$$$$$$$$$$$$$$$")
-
-
-
-
-
-
+#
+#
 def recipe_add(request):
 
     if request.user.is_authenticated:
@@ -121,6 +111,8 @@ def recipe_add(request):
     else:
         return HttpResponseRedirect("/login/")
 
+#
+#
 def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
 
@@ -144,6 +136,8 @@ def recipe_edit(request, recipe_id):
             return HttpResponse("Missing required fields")
     return render(request, 'recipes/recipe_edit.html', {'recipe': recipe,})
 
+#
+#
 def profile(request):
     if request.user.is_authenticated:
         profile = get_object_or_404(RecipesUser, user=request.user)
@@ -151,7 +145,8 @@ def profile(request):
         return render(request, "recipes/profile.html", {"profile": profile, "recipes": recipes})
     else:
         return HttpResponseRedirect("/login")
-
+#
+#
 def rate(request, pk):
     if request.user.is_authenticated:
         recipe = get_object_or_404(Recipe, pk=pk)
@@ -173,8 +168,32 @@ def rate(request, pk):
         return render(request, 'recipes/rate.html', {'recipe': recipe})
     else:
         return HttpResponseRedirect("/login/")
+    
+#
+#
+def comment(request, pk):
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            recipe = get_object_or_404(Recipe, pk=pk)
+            return render(request, 'recipes/comment.html', {"recipe": recipe})
+        else:
 
+            user = request.user
+            recipes_user = get_object_or_404(RecipesUser, user = user)
+            text = request.POST.get("text")
 
+            comment = Comment(
+                recipe = recipe,
+                text = text,
+                creator = recipes_user,
+            )
+            comment.save()
+            return HttpResponseRedirect(f'/recipe/{recipe.id}/')
+    else:
+        return HttpResponseRedirect('/login/')
+            
+#
+#
 def log_in(request):
     if request.method == "GET":
         return render(request, "recipes/login.html", {})
@@ -189,6 +208,8 @@ def log_in(request):
     
     return render(request, "recipes/login.html", {"error": "username or password is wrong"})
 
+#
+#
 def log_out(request):
     logout(request)
     return HttpResponseRedirect("login")

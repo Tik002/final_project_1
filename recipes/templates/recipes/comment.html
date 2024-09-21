@@ -1,14 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RecipeBook</title>
     <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
-
 </head>
-<body> 
+
+<body>
     <header>
         <div class="container">
             <h1 class="logo">World Kitchen</h1>
@@ -17,40 +18,30 @@
                     <li><a href="{% url 'recipe_list' %}">Menu</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'recipe_add' %}">Add recipe</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
     </header>
-    <h1>{{ recipes.title }}</h1>
-    <br>
-    <h2>ingredients</h2>
-    <p>{{recipes.ingredients}}</p>
-    <br>
-    <h2>instructions</h2>
-    <p>{{recipes.instructions}}</p>
-    <br>
-    <p>lasting:{{recipes.prep_time}} minutes</p>
-    <p>rateing: {{recipes.rate}}</p>
-    <a href="{% url 'comment' recipe.id %}"></a>
-
-
-    {% if boolean == True %}
-        <a href="{% url 'recipe_edit' recipes.id %}">Edit recipe</a>
-    {% endif %}
-
-    
-    <p>rate {{recipes.count}} users</p>
-        <a href="{% url 'rate' recipes.id %}">Rate</a>
-    <p>created by: {{recipes.creator}}</p>
+    <h1>recipe.title</h1>
+        <form action="{% url 'comment' %}">
+            {% csrf_token %}
+            <label for="text", id="text", name="text">Text</label><br><br>
+            <textarea name="text" id="text"></textarea>
+            <button type="submit">Submit</button>
+        </form>
     <footer>
         <div class="container">
             <nav>
                 <ul>
-                    <li><a href="{% url 'recipe_list' %}">Menu</a></li>
-                    <li><a href="{% url 'profile' %}">Profile</a></li>
-                    <li><a href="{% url 'recipe_add' %}">Add Recipe</a></li>
-                    <li><a href="{% url 'register' %}">Register</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
                 </ul>
             </nav>
             <div class="social-media">
@@ -62,4 +53,5 @@
         </div>
     </footer>
 </body>
+
 </html>
