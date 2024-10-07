@@ -21,15 +21,17 @@
             </nav>
         </div>
     </header>
-    <form action="{% url 'recipe_add' %}" method="post">
+    <form action="{% url 'recipe_add' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="title">Name of product</label><br><br>
+        <label for="title">Name of product</label><br>
         <input type="text" id="title" name="title"><br><br>
-        <label for="ingredients">Ingredients</label><br><br>
+        <label for="image">Upload image</label><br>
+        <input type="file" name="image" required><br><br>
+        <label for="ingredients">Ingredients</label><br>
         <textarea name="ingredients" id="ingredients"></textarea><br><br>
-        <label for="instructions">Instruction</label><br><br>
+        <label for="instructions">Instruction</label><br>
         <textarea name="instructions" id="instructions"></textarea><br><br>
-        <label for="prep_time">Prep time</label><br><br>
+        <label for="prep_time">Prep time (minutes)</label><br>
         <input type="text" id="prep_time" name="prep_time"><br><br>
         <input type="submit" value="Save">
     </form>

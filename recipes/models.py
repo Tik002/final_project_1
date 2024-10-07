@@ -26,6 +26,7 @@ class Recipe(models.Model):
     count = models.IntegerField(default=0)
     prep_time = models.IntegerField()
     creator = models.ForeignKey(RecipesUser, on_delete=models.CASCADE, null=True)
+    image = models.ImageField(blank=True, upload_to='images', null=True)
 
 
     def __str__(self) -> str:
@@ -34,9 +35,15 @@ class Recipe(models.Model):
 class Comment(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     text = models.TextField(max_length=400)
-    like_count = models.IntegerField(default=0)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.text
+
+
+class Like(models.Model):
+    likes_count = models.IntegerField(default=0)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)

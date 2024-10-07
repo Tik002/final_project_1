@@ -31,7 +31,7 @@
     <div class="recipes_container">
         {% for recipe in recipes %}
         <div class="recipes_container_item">
-            <img class="recipes_container_item_img" src="www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bbcgoodfood.com%2Frecipes%2Fcollection%2Fone-pot-recipes&psig=AOvVaw11LsLggia9s-lR4vxJIYuC&ust=1726240682039000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJjnyenZvYgDFQAAAAAdAAAAABAI" alt="">
+            <img class="recipes_container_item_img" src="{{recipe.image.url}}" alt="{{recipe.title}}"><br>
             <a href="{% url 'recipe_detail' recipe.id%}">{{recipe.title}}</a>
         </div>
         {% endfor %}

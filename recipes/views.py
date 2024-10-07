@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 import requests
 from bs4 import BeautifulSoup
+from django.core.files.base import ContentFile
+import os
 import datetime
 
 
@@ -19,8 +21,8 @@ def recipe_list(request):
 def recipe_detail(request, pk):
     recipes = get_object_or_404(Recipe, pk=pk)
     boolean = recipes.creator.user == request.user
-    comment = get_object_or_404(Comment, pk=pk)
-    return render(request, "recipes/recipe_details.html", {"recipes": recipes, "boolean": boolean, "comment": comment})
+    comments = Comment.objects.filter(recipe=recipes)
+    return render(request, "recipes/recipe_details.html", {"recipes": recipes, "boolean": boolean, "comment": comments})
 
 #
 #
@@ -67,7 +69,20 @@ def scraping_add(request):
         recipe_soup = BeautifulSoup(recipe_response.content, 'html.parser')
         title0 = recipe.find('h2')
 
+        image_url = recipe.find('img')['src'] if recipe.find('img') else None
 
+
+        if image_url:
+            # Download the image
+            img_response = requests.get(image_url)
+            if img_response.status_code == 200:
+                # Create a ContentFile and save it
+                image_name = os.path.basename(image_url)
+                recipe_instance = Recipe(title=title, ingredients=ingredients, instructions=instructions)
+                recipe_instance.image.save(image_name, ContentFile(img_response.content), save=True)
+
+
+        print(f"image {image_url} ???????????????????????????????????")
         title = title0.get_text(strip=True) if title0 else "Untitled"
         ingredients = [li.get_text(strip=True) for li in recipe_soup.find_all('li', class_='pb-xxs pt-xxs list-item list-item--separator')]
         instructions = [step.get_text(strip=True) for step in recipe_soup.find_all('li', class_='pb-xs pt-xs list-item')]
@@ -75,6 +90,7 @@ def scraping_add(request):
         
         recipe = Recipe(
                     title = title,
+                    image = image_url,
                     ingredients = ingredients,
                     instructions = instructions,
                     prep_time = prep_time,
@@ -93,6 +109,7 @@ def recipe_add(request):
         
         else:
             title = request.POST.get('title')
+            image = request.FILES.get('image')
             user = request.user
             ru = get_object_or_404(RecipesUser, user=user)
             ingredients = request.POST.get('ingredients')
@@ -101,6 +118,7 @@ def recipe_add(request):
 
             recipe = Recipe(
                         title = title,
+                        image = image,
                         ingredients = ingredients,
                         instructions = instructions,
                         prep_time = prep_time,
@@ -110,6 +128,26 @@ def recipe_add(request):
             return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect("/login/")
+#
+#
+# def like(request):
+#     if request.user.is_authenticated:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #
 #
@@ -172,26 +210,34 @@ def rate(request, pk):
 #
 #
 def comment(request, pk):
+    recipe = get_object_or_404(Recipe, id=pk)
+    comments = Comment.objects.filter(recipe=recipe).order_by('-created_at')
+    
     if request.user.is_authenticated:
         if request.method == 'GET':
-            recipe = get_object_or_404(Recipe, pk=pk)
-            return render(request, 'recipes/comment.html', {"recipe": recipe})
+            # print(request.user)
+            return render(request, 'recipes/comment.html', {'recipe': recipe, 'comments': comments,})
         else:
-
+            print("hiiiiiiiiiiiiii")
+            text = request.POST.get('text')
             user = request.user
-            recipes_user = get_object_or_404(RecipesUser, user = user)
-            text = request.POST.get("text")
+            print(text)
+            print(user)
+            recipesuser = get_object_or_404(RecipesUser, user=user)
+            # print(recipesuser)
 
             comment = Comment(
-                recipe = recipe,
-                text = text,
-                creator = recipes_user,
+                recipe=recipe,
+                text=text,
+                creator=user
             )
             comment.save()
-            return HttpResponseRedirect(f'/recipe/{recipe.id}/')
+            print(comment.__hash__)
+            return HttpResponseRedirect(f'/recipe/{pk}/')  
+
     else:
         return HttpResponseRedirect('/login/')
-            
+    
 #
 #
 def log_in(request):

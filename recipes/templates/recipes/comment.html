@@ -27,8 +27,8 @@
             </nav>
         </div>
     </header>
-    <h1>recipe.title</h1>
-        <form action="{% url 'comment' %}">
+    <h1>{{recipe.title}}</h1>
+        <form action="{% url 'comment' recipe.id %}" method = "post">
             {% csrf_token %}
             <label for="text", id="text", name="text">Text</label><br><br>
             <textarea name="text" id="text"></textarea>

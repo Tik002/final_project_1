@@ -59,6 +59,10 @@ body {
     flex: 1;
 }
 
+main{
+    margin: 10px;
+}
+
 /* Footer styles */
 footer {
     background-color: #6b6b6b;
@@ -112,17 +116,25 @@ footer p {
 }
 
 .recipes_container {
+    width: 100%;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .recipes_container_item {
-    width: 50px;
+    width: 200px;
     height: 200px;
     margin: 0 10px;
 }
 
 .recipes_container_item_img {
-    width: 50px;
-    height: 50px;
-    background-image: url("https://www.google.com/imgres?q=recipe&imgurl=https%3A%2F%2Fimages.immediate.co.uk%2Fproduction%2Fvolatile%2Fsites%2F30%2F2020%2F08%2Fchorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg%3Fquality%3D90%26resize%3D556%2C505&imgrefurl=https%3A%2F%2Fwww.bbcgoodfood.com%2Frecipes%2Fcollection%2Feasy-recipes&docid=0MYkDl3kvGAUTM&tbnid=zQYVTrlvbSQNAM&vet=12ahUKEwjZ5LPk2b2IAxWyBNsEHcU-ObQQM3oECBwQAA..i&w=556&h=505&hcb=2&ved=2ahUKEwjZ5LPk2b2IAxWyBNsEHcU-ObQQM3oECBwQAA");
+    width: 80%;
+    height: 80%;
+    margin: 10px;
+    margin-left: 0px;
+}
+
+.recipes_container_item_img_details{
+    width: 500px;
+    height: 400px;
 }

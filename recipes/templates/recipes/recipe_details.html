@@ -22,6 +22,10 @@
             </nav>
         </div>
     </header>
+    <main>
+    <div class="recipes_container_item_detail">
+        <img class="recipes_container_item_img_details" src="{{recipes.image.url}}" alt="">
+    </div>
     <h1>{{ recipes.title }}</h1>
     <br>
     <h2>ingredients</h2>
@@ -31,18 +35,27 @@
     <p>{{recipes.instructions}}</p>
     <br>
     <p>lasting:{{recipes.prep_time}} minutes</p>
-    <p>rateing: {{recipes.rate}}</p>
-    <a href="{% url 'comment' recipe.id %}"></a>
+    
+    <h2>Comments</h2>
+    {% if comment %}
+        {% for i in comment %}
+            <li>{{ i.creator }} <br><br>{{ i.text }} <br>Commented at {{i.created_at}}</li> <br><br>
+        {% endfor %}
+    {% else %}
+    <p>No comments yet</p>
+    {% endif %}
+    <a href="{% url 'comment' recipes.id %}">Add comment</a><br><br>
 
 
+    <p>rateing: {{recipes.rate}}</p>    
+    <p>rate {{recipes.count}} users</p>
+    <a href="{% url 'rate' recipes.id %}">Rate</a>
+    <p>created by: {{recipes.creator}}</p>
+    
     {% if boolean == True %}
         <a href="{% url 'recipe_edit' recipes.id %}">Edit recipe</a>
     {% endif %}
-
-    
-    <p>rate {{recipes.count}} users</p>
-        <a href="{% url 'rate' recipes.id %}">Rate</a>
-    <p>created by: {{recipes.creator}}</p>
+    </main>
     <footer>
         <div class="container">
             <nav>
